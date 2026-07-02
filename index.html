@@ -2,48 +2,31 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>متجر رايزي | للخدمات الرقمية</title>
+    <title>متجر رايزي</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { background-color: #141414; color: #2BED33; font-family: sans-serif; text-align: center; }
-        .product-card { border: 2px solid #2BED33; padding: 20px; margin: 20px; border-radius: 10px; }
-    </style>
 </head>
 <body>
-    <h1>متجر رايزي</h1>
-    <div id="product-display" class="product-card">جاري جلب المنتجات...</div>
+    <h1 id="msg">جارٍ التحميل...</h1>
+    <div id="content"></div>
 
     <script>
-        // إعدادات الربط
-        const supabaseUrl = 'https://ncaodgltkdvaauliemuz.supabase.co';
-        const supabaseKey = 'sb_publishable_J2OFsdTGA2bqeQdDmUMbew_oy1G3q4W';
-        
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const supabase = supabase.createClient(
+            'https://ncaodgltkdvaauliemuz.supabase.co', 
+            'sb_publishable_J2OFsdTGA2bqeQdDmUMbew_oy1G3q4W'
+        );
 
-        async function fetchProduct() {
-            try {
-                const { data, error } = await supabase.from('products').select('*');
-                
-                if (error) {
-                    document.getElementById('product-display').innerHTML = "خطأ في الاتصال: " + error.message;
-                    return;
-                }
-
-                if (data && data.length > 0) {
-                    let html = '';
-                    data.forEach(p => {
-                        html += `<h2>${p.name}</h2><p>السعر: ${p.price_usd}$</p><p>${p.description}</p><hr>`;
-                    });
-                    document.getElementById('product-display').innerHTML = html;
-                } else {
-                    document.getElementById('product-display').innerHTML = "لا توجد منتجات حالياً.";
-                }
-            } catch (err) {
-                document.getElementById('product-display').innerHTML = "حدث خطأ غير متوقع.";
+        async function test() {
+            const msg = document.getElementById('msg');
+            const { data, error } = await supabase.from('products').select('*');
+            
+            if (error) {
+                msg.innerText = "خطأ: " + error.message;
+            } else {
+                msg.innerText = "المنتجات:";
+                document.getElementById('content').innerHTML = JSON.stringify(data);
             }
         }
-        
-        fetchProduct();
+        test();
     </script>
 </body>
 </html>
