@@ -1,34 +1,6 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>متجر رايزي</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body>
-    <div id="app">جارٍ التحميل...</div>
-
-    <script>
-        const supabaseUrl = 'https://ncaodgltkdvaauliemuz.supabase.co';
-        const supabaseKey = 'Sb_publishable_J2OFsdTGA2bqeQdDmUMbew_oy1G3q4W';
-        
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-        async function init() {
-            try {
-                const { data, error } = await supabase.from('products').select('*');
-                if (error) throw error;
-                
-                if (data && data.length > 0) {
-                    document.getElementById('app').innerHTML = "<h2>المنتجات:</h2><pre>" + JSON.stringify(data, null, 2) + "</pre>";
-                } else {
-                    document.getElementById('app').innerHTML = "لا توجد بيانات في الجدول.";
-                }
-            } catch (err) {
-                document.getElementById('app').innerHTML = "خطأ: " + err.message;
-            }
-        }
-        init();
-    </script>
-</body>
-</html>
+<h1 id="status">جاري التحقق...</h1>
+<script>
+    fetch('https://ncaodgltkdvaauliemuz.supabase.co')
+    .then(response => document.getElementById('status').innerText = "تم الاتصال بنجاح بـ Supabase!")
+    .catch(err => document.getElementById('status').innerText = "فشل الاتصال: " + err);
+</script>
