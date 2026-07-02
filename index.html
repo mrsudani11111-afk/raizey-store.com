@@ -6,27 +6,29 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <h1 id="msg">جارٍ التحميل...</h1>
-    <div id="content"></div>
+    <div id="app">جارٍ التحميل...</div>
 
     <script>
-        const supabase = supabase.createClient(
-            'https://ncaodgltkdvaauliemuz.supabase.co', 
-            'sb_publishable_J2OFsdTGA2bqeQdDmUMbew_oy1G3q4W'
-        );
+        const supabaseUrl = 'https://ncaodgltkdvaauliemuz.supabase.co';
+        const supabaseKey = 'Sb_publishable_J2OFsdTGA2bqeQdDmUMbew_oy1G3q4W';
+        
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function test() {
-            const msg = document.getElementById('msg');
-            const { data, error } = await supabase.from('products').select('*');
-            
-            if (error) {
-                msg.innerText = "خطأ: " + error.message;
-            } else {
-                msg.innerText = "المنتجات:";
-                document.getElementById('content').innerHTML = JSON.stringify(data);
+        async function init() {
+            try {
+                const { data, error } = await supabase.from('products').select('*');
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    document.getElementById('app').innerHTML = "<h2>المنتجات:</h2><pre>" + JSON.stringify(data, null, 2) + "</pre>";
+                } else {
+                    document.getElementById('app').innerHTML = "لا توجد بيانات في الجدول.";
+                }
+            } catch (err) {
+                document.getElementById('app').innerHTML = "خطأ: " + err.message;
             }
         }
-        test();
+        init();
     </script>
 </body>
 </html>
