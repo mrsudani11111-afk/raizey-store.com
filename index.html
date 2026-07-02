@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>متجر رايزي | للخدمات الرقمية</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { background-color: #141414; color: #2BED33; font-family: sans-serif; text-align: center; }
+        .product-card { border: 2px solid #2BED33; padding: 20px; margin: 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <h1>متجر رايزي</h1>
+    <div id="product-display" class="product-card">جاري جلب المنتجات...</div>
+
+    <script>
+        // بيانات الربط الخاصة بك
+        const supabaseUrl = 'https://ncaodgltkdvaauliemuz.supabase.co';
+        const supabaseKey = 'sb_publishable_J2OFsdTGA2bqeQdDmUMbew_oy1G3q4W';
+        
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function fetchProduct() {
+            const { data, error } = await supabase.from('products').select('*');
+            if (data && data.length > 0) {
+                let html = '';
+                data.forEach(p => {
+                    html += `<h2>${p.name}</h2><p>السعر: ${p.price_usd}$</p><p>${p.description}</p><hr>`;
+                });
+                document.getElementById('product-display').innerHTML = html;
+            } else {
+                document.getElementById('product-display').innerHTML = "لا توجد منتجات حالياً.";
+            }
+        }
+        fetchProduct();
+    </script>
+</body>
+</html>
