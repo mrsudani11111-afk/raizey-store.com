@@ -14,24 +14,35 @@
     <div id="product-display" class="product-card">جاري جلب المنتجات...</div>
 
     <script>
-        // بيانات الربط الخاصة بك
+        // إعدادات الربط
         const supabaseUrl = 'https://ncaodgltkdvaauliemuz.supabase.co';
         const supabaseKey = 'sb_publishable_J2OFsdTGA2bqeQdDmUMbew_oy1G3q4W';
         
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         async function fetchProduct() {
-            const { data, error } = await supabase.from('products').select('*');
-            if (data && data.length > 0) {
-                let html = '';
-                data.forEach(p => {
-                    html += `<h2>${p.name}</h2><p>السعر: ${p.price_usd}$</p><p>${p.description}</p><hr>`;
-                });
-                document.getElementById('product-display').innerHTML = html;
-            } else {
-                document.getElementById('product-display').innerHTML = "لا توجد منتجات حالياً.";
+            try {
+                const { data, error } = await supabase.from('products').select('*');
+                
+                if (error) {
+                    document.getElementById('product-display').innerHTML = "خطأ في الاتصال: " + error.message;
+                    return;
+                }
+
+                if (data && data.length > 0) {
+                    let html = '';
+                    data.forEach(p => {
+                        html += `<h2>${p.name}</h2><p>السعر: ${p.price_usd}$</p><p>${p.description}</p><hr>`;
+                    });
+                    document.getElementById('product-display').innerHTML = html;
+                } else {
+                    document.getElementById('product-display').innerHTML = "لا توجد منتجات حالياً.";
+                }
+            } catch (err) {
+                document.getElementById('product-display').innerHTML = "حدث خطأ غير متوقع.";
             }
         }
+        
         fetchProduct();
     </script>
 </body>
